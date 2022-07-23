@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css"/>
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>LES WEBSOCKET</h1>
+    <p>WebSocket est un standard du Web désignant un protocole réseau1 de la couche application et une interface de programmation du World Wide Web visant à créer des canaux de communication full-duplex par-dessus une connexion TCP pour les navigateurs web. Le protocole a été normalisé par l'IETF dans la RFC 64552 en 2011 et l'interface de programmation3 par le W3C. </p>
+    <p>L'interactivité croissante des applications web, consécutive à l'amélioration des performances des navigateurs, a rapidement rendu nécessaire le développement de techniques de communications bidirectionnelles entre l'application web client et les processus serveur. Des techniques basées sur l'appel de requête par le client via l'objet XMLHttpRequest et utilisant des requêtes HTTP avec un type long TTL stockées par le serveur pour une réponse ultérieure au client ont permis de pallier ce manque et ont été popularisées par le succès des architectures Ajax. </p>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <input id="input" autocomplete="off">
+        <button id="button" type="submit">Envoyer</button>
+    </form>
+    
+    <!--Appel local de scoket.io-->
+    <script src="node_modules/socket.io/client-dist/socket.io.js"></script>
+    <script>
+        //Instance de socket
+        let socket = io();
+        //le formulaire
+        let form = document.getElementById('form');
+        //Le champ input
+        let input = document.getElementById('input');
+        //la liste <ul>
+        let messages = document.getElementById('messages');    
+        //Quand le formulaire est soumis
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            //Si la valeur de input est true
+            if(input.value){
+                socket.emit('ChatMessage', input.value);
+                //On vide le champs
+                input.value = ''
+            }
+        });
+
+        //Afficher le message coté front
+        socket.on('ChatMessage', (msg) => {
+            //Js genere des <li>
+            let itemLI = document.createElement('li');
+            //<li> = la valeur de input
+            itemLI.textContent = msg;
+            //Ajoute les <li> au parent <ul>
+            messages.appendChild(itemLI);
+            //On scroll au message ajouter
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+        
+    </script>
+</body>
+</html>
